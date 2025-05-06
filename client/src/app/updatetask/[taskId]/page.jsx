@@ -1,7 +1,8 @@
 "use client";
 
+import { baseUrl, getAndDeleteReq } from "@/apicalls/apicalls";
 import { useParams } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function UpdateTask(){
     const {taskId} = useParams();
@@ -9,7 +10,7 @@ export default function UpdateTask(){
     const [task , setTask] = useState({
         title:"",
         description:"",
-        prority:"",
+        priority:"",
         duedate:""
     });
 
@@ -17,28 +18,29 @@ export default function UpdateTask(){
         setTask({...task , [e.target.name]:e.target.value})
     }
 
-    // useEffect(()=>{
-    //     if(!taskId){
-    //         return;
-    //     }
-    //     setIsLoading(true);
-    //     const getTask = async()=>{
-    //         try {
-    //             const response = await getAndDeleteReq(`${baseUrl}/task/${taskId}`);
-    //             console.log(response);
-    //             if(response.status === "success"){
-    //                 setTask(response?.data);
-    //             }
-    //         } catch (error) {
-    //             const errorMessage = error.response?.data?.message || "server Error! ";
-    //             toast.error(errorMessage)
-    //         }finally{
-    //             setIsLoading(false);
-    //         }
-    //     }
-    //     getTask();
-    // } , [taskId]);
-
+    useEffect(()=>{
+        if(!taskId){
+            return;
+        }
+        setIsLoading(true);
+        const getTask = async()=>{
+            try {
+                const response = await getAndDeleteReq(`${baseUrl}/task/${taskId}` , "get");
+                console.log(response);
+                if(response.status === "success"){
+                    const data = response?.data;
+                    const formattedDate = data.duedate?.split("T")[0];
+                    setTask({...data , duedate:formattedDate})
+                }
+            } catch (error) {
+                const errorMessage = error.response?.data?.message || "server Error! ";
+                toast.error(errorMessage)
+            }finally{
+                setIsLoading(false);
+            }
+        }
+        getTask();
+    } , [taskId]);
     const handleEditTask = async(e)=>{
         e.preventDefault();
         console.log(task);
@@ -81,8 +83,8 @@ export default function UpdateTask(){
                     required
                     />
                     <label htmlFor="title" className="text-sm font-medium mb-1">Prority</label>
-                    <select defaultValue="Pick a color" className="select" name="prority" id="priority" onChange={handleOnChange}>
-                        <option disabled={true}>Pick a Priority</option>
+                    <select value={task.priority} className="select" name="priority" id="priority" onChange={handleOnChange}>
+                        <option disabled={true} value="">Pick a Priority</option>
                         <option value={"low"}>Low</option>
                         <option value={"mid"}>Mid</option>
                         <option value={"high"}>High</option>

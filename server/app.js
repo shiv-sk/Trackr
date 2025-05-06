@@ -5,7 +5,7 @@ const cors = require("cors");
 const helmet = require("helmet");
 
 
-const allowedOrigins = ["http://localhost:5173"];
+const allowedOrigins = ["http://localhost:3000"];
 const corsOption = {
     origin:function(origin , callback){
         if(!origin || allowedOrigins.includes(origin)){

@@ -1,36 +1,41 @@
 "use client";
 
+import { baseUrl, getAndDeleteReq } from "@/apicalls/apicalls";
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 
 export default function TaskDetail(){
     const {taskId} = useParams();
     const [isLoading , setIsLoading] = useState(false);
     const [task , setTask] = useState(null);
 
-    // useEffect(()=>{
-    //     const getTask = async()=>{
-    //         if(!taskId){
-    //             return;
-    //         }
-    //         setIsLoading(true);
-    //         try {
-    //             const response = await getAndDeleteReq(`${baseUrl}/task/${taskId}`);
-    //             // console.log(response);
-    //             if(response.status === "success"){
-    //                 setTask(response.data || null)
-    //             }
-    //         } catch (error) {
-    //             // console.log(error);
-    //             const errorMessage = error.response?.data?.message || "server Error! ";
-    //             toast.error(errorMessage)
-    //         }finally{
-    //             setIsLoading(false);
-    //         }
-    //     }
-    //     getTask();
-    // } , [taskId]);
+    useEffect(()=>{
+        const getTask = async()=>{
+            if(!taskId){
+                return;
+            }
+            
+            setIsLoading(true);
+            try {
+                const response = await getAndDeleteReq(`${baseUrl}/task/${taskId}` , "get");
+                console.log("function passed upto here! ");
+                console.log(response);
+                if(response.status === "success"){
+                    setTask(response.data || null)
+                }
+                
+            } catch (error) {
+                // console.log(error);
+                const errorMessage = error.response?.data?.message || "server Error! ";
+                toast.error(errorMessage)
+            }finally{
+                setIsLoading(false);
+            }
+        }
+        getTask();
+    } , [taskId]);
 
     // const handleDelete = async(e , taskId)=>{
     //     e.preventDefault();
@@ -56,24 +61,24 @@ export default function TaskDetail(){
                     isLoading ? "Processing..." :
                     task ? (
                         <>
-                            <h1 className="text-lg font-semibold text-white">{task.title || "Task-Title"}</h1>
-                            <p className="font-medium text-white">{task.description || "Task-Description"}</p>
+                            <h1 className="text-lg font-semibold ">{task.title || "Task-Title"}</h1>
+                            <p className="font-medium text-lg">{task.description || "Task-Description"}</p>
                             <div className="flex flex-wrap justify-around items-center gap-1.5">
-                                <span className="font-light text-lg text-white">
-                                    CreatedAt:{new Date(task.createdAt).toLocaleDateString()}
+                                <span className="font-light text-lg ">
+                                    CreatedAt:{new Date(task?.createdAt).toLocaleDateString()}
                                 </span>
-                                <span className="font-light text-lg text-white">Status:{task.status}</span>
-                                <span className="font-light text-lg text-white">AssignedTo:
-                                    {task?.assignedTo ? task.assignedTo : "N/A"}
+                                <span className="font-light text-lg">Duedate:
+                                    {task?.duedate ? new Date(task.duedate).toLocaleDateString() : "N/A"}
                                 </span>
-                                <span className="font-light text-lg text-white">completedAt:
-                                    {task?.completedAt ? new Date(task.completedAt).toLocaleDateString() : "N/A"}
+                                <span className="font-light text-lg">Status:{task.status}</span>
+                                <span className="font-light text-lg">AssignedTo:
+                                    {task?.assignedTo ? task?.assignedTo?.name : "N/A"}
                                 </span>
                             </div>
                             <div className="flex flex-wrap justify-around items-center gap-1.5">
                                 <button className="btn btn-neutral shadow-lg">Assign</button>
-                                <Link to={`/edittask/${task._id}`}><button className="btn btn-neutral shadow-lg">Edit</button></Link>
-                                <button className="btn btn-neutral shadow-lg" onClick={handleDelete}>Delete</button>
+                                <Link href={`/updatetask/${task._id}`}><button className="btn btn-neutral shadow-lg">Edit</button></Link>
+                                <button className="btn btn-neutral shadow-lg">Delete</button>
                             </div>
                         </>
                     ) : (

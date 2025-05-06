@@ -1,38 +1,66 @@
+"use client";
+
+import { baseUrl, getAndDeleteReq } from "@/apicalls/apicalls";
+import { useAuth } from "@/context/AuthContext";
+import Link from "next/link";
+import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
+
 export default function MyAssignedTasks(){
+    const {user} = useAuth();
+    const [isLoading , setIsLoading] = useState(false);
+    const [tasks , setTasks] = useState([]);
+
+    useEffect(()=>{
+        if(!user || !user._id){
+            return;
+        }
+        const assignedTasks = async()=>{
+            setIsLoading(true);
+            try {
+                const response = await getAndDeleteReq(`${baseUrl}/task/get/allassigned/tasks/${user._id}` , "get");
+                if(response.status === "success"){
+                    console.log(response);
+                    setTasks(response?.data || []);
+                }
+            } catch (error) {
+                const errorMessage = error?.response?.data?.message || "server Error! "
+                toast.error(errorMessage);
+            }finally{
+                setIsLoading(false);
+            }
+        }
+        assignedTasks();
+    } , [user]);
+
     return(
         <div className="min-h-screen flex flex-col justify-center items-center py-8 px-4">
             <h1 className="text-lg font-bold mb-3.5">MyAssignedTask!</h1>
             <div className="flex flex-wrap gap-2.5 justify-center">
-                <div className="card w-96 shadow-lg">
-                    <div className="card-body items-center text-center">
-                        <h2 className="card-title">Task-Tile!</h2>
-                        <p className="font-light text-lg">Task Description.</p>
-                        <div className="card-actions justify-end">
-                        <button className="btn btn-neutral shadow-lg">More</button>
-                        <button className="btn btn-neutral shadow-lg">MarkAsDone</button>
+                {
+                    tasks && tasks.length > 0 ? tasks.map((task)=>(
+                        <div className="card w-96 shadow-lg" key={task._id}>
+                            <div className="card-body">
+                                <h2 className="card-title">{task?.title || "Task-Title!"}</h2>
+                                <p className="font-light text-lg">{task?.description || "Task-Description"}</p>
+                                <div className="flex flex-wrap gap-2.5">
+                                    <span className="text-lg">
+                                        Duedate:{task?.duedate ? new Date(task?.duedate).toLocaleDateString() : "Task DueDate"}
+                                    </span>
+                                    <span className="text-lg">
+                                        Prority:{task?.priority || "Task Prority"}
+                                    </span>
+                                </div>
+                                <div className="card-actions justify-end">
+                                <Link href={`/gettask/${task._id}`}><button className="btn btn-neutral shadow-lg">More</button></Link>
+                                <button className="btn btn-neutral shadow-lg">MarkAsDone</button>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                </div>
-                <div className="card w-96 shadow-lg">
-                    <div className="card-body items-center text-center">
-                        <h2 className="card-title">Task-Tile!</h2>
-                        <p className="font-light text-lg">Task Description.</p>
-                        <div className="card-actions justify-end">
-                        <button className="btn btn-neutral shadow-lg">More</button>
-                        <button className="btn btn-neutral shadow-lg">MarkAsDone</button>
-                        </div>
-                    </div>
-                </div>
-                <div className="card w-96 shadow-lg">
-                    <div className="card-body items-center text-center">
-                        <h2 className="card-title">Task-Tile!</h2>
-                        <p className="font-light text-lg">Task Description.</p>
-                        <div className="card-actions justify-end">
-                        <button className="btn btn-neutral shadow-lg">More</button>
-                        <button className="btn btn-neutral shadow-lg">MarkAsDone</button>
-                        </div>
-                    </div>
-                </div>
+                    )) : (
+                        <p>No Assigned Tasks</p>
+                    )
+                }
             </div>
         </div>
     )

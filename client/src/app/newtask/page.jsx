@@ -1,23 +1,45 @@
 "use client"
+import { baseUrl, postAndPatchReq } from "@/apicalls/apicalls";
+import { useAuth } from "@/context/AuthContext";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { toast } from "react-toastify";
 
 export default function NewTask(){
+    const {user} = useAuth();
+    const router = useRouter();
 
     const [taskData , setTaskData] = useState({
         title:"",
         description:"",
         duedate:"",
-        priority:""
+        priority:"",
+        userId:""
     })
     const [isLoading , setIsLoading] = useState(false);
 
     const handleOnChange = (e)=>{
         setTaskData({...taskData , [e.target.name]:e.target.value})
     }
-
     const handleNewTask = async(e)=>{
         e.preventDefault();
-        console.log(taskData);
+        if(!user || !user._id){
+            alert("user is not presnt! ");
+            return;
+        }
+        setIsLoading(true);
+        try {
+            const response = await postAndPatchReq(`${baseUrl}/task/new` , "post" , {...taskData , userId:user._id});
+            // console.log(response);
+            if(response.status === "success"){
+                router.push("/");
+            }
+        } catch (error) {
+            const errorMessage = error?.response?.data?.message || "server Error! "
+            toast.error(errorMessage);
+        }finally{
+            setIsLoading(false);
+        }
     }
     return(
         <div className="flex flex-col justify-center items-center min-h-screen gap-4 py-5">

@@ -5,11 +5,7 @@ const ApiResponse = require("../utils/apiResponse");
 const asyncHandler = require("../utils/asyncHandler");
 
 exports.newTask = asyncHandler(async (req , res)=>{
-    const {userId} = req.params;
-    if(!userId || !mongoose.Types.ObjectId.isValid(userId)){
-        throw new ApiError(400 , "userId is empty or inValid! ");
-    }
-    const {title , description , duedate , priority} = req.body;
+    const {title , description , duedate , priority , userId} = req.body;
     const existTask = await Task.findOne({$and:[{owner:userId} , {title}]});
     if(existTask){
         return res.status(400).json(
@@ -71,7 +67,7 @@ exports.getOverdueTaskofUser = (async(req , res)=>{
     if(!userId || !mongoose.Types.ObjectId.isValid(userId)){
         throw new ApiError(400 , "userId is empty or inValid! ");
     }
-    const tasks = await Task.find({duedate:{$lt:new Date()} , status:{$ne:"Closed"} , owner:userId});
+    const tasks = await Task.find({duedate:{$lt:new Date()} , status:{$ne:"Closed"} , assignedTo:userId});
     if(tasks.length === 0){
         return res.status(404).json(
             new ApiResponse("no overDue tasks found! " , {} , 404)
@@ -83,6 +79,7 @@ exports.getOverdueTaskofUser = (async(req , res)=>{
 })
 
 exports.getTask = asyncHandler(async(req , res)=>{
+    console.log("get task is hitting! ");
     const {taskId} = req.params;
     if(!taskId || !mongoose.Types.ObjectId.isValid(taskId)){
         throw new ApiError(400 , "taskId is missing or inValid! ");

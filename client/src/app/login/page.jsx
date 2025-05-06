@@ -1,19 +1,31 @@
 "use client";
+import { useAuth } from "@/context/AuthContext";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { toast } from "react-toastify";
 
 export default function Login(){
+    const router = useRouter();
     const [loginData , setLoginData] = useState({
         email:"",
         password:""
     })
 
+    const {loginUser , isLoading} = useAuth();
     const handleOnChange = (e)=>{
         setLoginData({...loginData , [e.target.name]:e.target.value})
     }
 
     const handleLogin = async(e)=>{
         e.preventDefault();
+        const response = await loginUser(loginData);
+        if(response.success){
+            router.push("/");
+        }
+        else{
+            toast.error(response.error || "Login failed!");
+        }
     }
     return(
         <div className="flex flex-col justify-center items-center min-h-screen gap-4 py-5">
@@ -40,13 +52,15 @@ export default function Login(){
                     placeholder="pass@123" 
                     className="input w-full"
                     value={loginData.password}
+                    autoComplete="true"
                     onChange={handleOnChange} 
                     required/>
                     <p> Create a new account <Link href={"/"}>
                     <span className="hover:border-b-2 hover:cursor-pointer hover:text-blue-500">Register</span></Link></p>
                     <button 
                     type="submit" 
-                    className="btn w-full btn-neutral text-lg font-semibold" >Login</button>
+                    className="btn w-full btn-neutral text-lg font-semibold" 
+                    disabled={isLoading}>{isLoading ? "Processing..." :"Login"}</button>
                     </form>
                 </div>
             </div>

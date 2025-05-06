@@ -1,4 +1,37 @@
+"use client";
+
+import { baseUrl, getAndDeleteReq } from "@/apicalls/apicalls";
+import { useAuth } from "@/context/AuthContext";
+import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
+
 export default function OverdueTasks(){
+    const {user} = useAuth();
+    const [tasks , setTasks] = useState([]);
+    const [isLoading , setIsLoading] = useState(false);
+    
+    useEffect(()=>{
+        if(!user || !user._id){
+            return;
+        }
+        const getOverDueTasks = async()=>{
+            const response = await getAndDeleteReq(`${baseUrl}/task/get/overdue/tasks/${user._id}` , "get");
+            setIsLoading(true);
+            try {
+                if(response.status === "success"){
+                    setTasks(response?.data || []);
+                    console.log("all overdue tasks! " , response?.data);
+                }
+            } catch (error) {
+                const errorMessage = error?.response?.data?.message || "server Error! "
+                toast.error(errorMessage);
+            }finally{
+                setIsLoading(false);
+            }
+        }
+        getOverDueTasks();
+    } , [user]);
+
     return(
         <div className="min-h-screen flex flex-col justify-center items-center py-8 px-4">
             <h1 className="text-lg font-bold mb-3.5">MyAssignedTask!</h1>
