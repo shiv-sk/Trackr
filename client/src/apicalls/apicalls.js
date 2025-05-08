@@ -1,5 +1,5 @@
 import axios from "axios";
-const baseUrl = "http://localhost:4000/api/v1";
+const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
 const getAndDeleteReq = async(url , method)=>{
     try {
         const response = await axios({
