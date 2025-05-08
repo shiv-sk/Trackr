@@ -13,6 +13,7 @@ const corsOption = {
         }
         else{
             console.log("blocked by origin: " , origin)
+            callback(new Error("Not allowed by CORS"));
         }
     },
     credentials:true,

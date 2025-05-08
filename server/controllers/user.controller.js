@@ -45,7 +45,7 @@ exports.logOut = asyncHandler(async(req , res)=>{
     const cookieOptions = {
         httpOnly:true,
         secure:true,
-        sameSite:"strict",
+        sameSite: "None",
     }
     return res.clearCookie("accessToken" ,cookieOptions).status(200).json(
         new ApiResponse("user is logout successfully! " , {} , 200)
@@ -85,12 +85,12 @@ exports.register = asyncHandler(async (req,res)=>{
     }
     user.password = undefined
     const accessToken = Token(user);
-    const options = {
+    const cookieOptions = {
         httpOnly:true,
         secure:true,
-        sameSite:"strict",
+        sameSite: "None",
     }
-    return res.status(201).cookie("accessToken" , accessToken , options).json(
+    return res.status(201).cookie("accessToken" , accessToken , cookieOptions).json(
         new ApiResponse("user is created" , user , 201)
     )
 })
@@ -107,13 +107,19 @@ exports.login = asyncHandler(async(req,res)=>{
         throw new ApiError(400,"password is incorrect");
     }
     user.password = undefined;
-    const options = {
+    const cookieOptions = {
         httpOnly:true,
         secure:true,
-        sameSite:"strict",
+        sameSite: "None",
     }
     const accessToken = Token(user);
-    return res.status(200).cookie("accessToken" , accessToken , options).json(
+    return res.status(200).cookie("accessToken" , accessToken , cookieOptions).json(
         new ApiResponse("user is logedIn" , user  , 200)
     )
 })
+
+exports.roleBasedcontroller = asyncHandler(async(req , res)=>{
+    return res.status(200).json(
+        new ApiResponse("this is test controller for role based! " , {} , 200)
+    )
+}) 
