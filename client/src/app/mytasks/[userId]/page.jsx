@@ -2,22 +2,33 @@
 import { baseUrl, getAndDeleteReq } from "@/apicalls/apicalls";
 import { useAuth } from "@/context/AuthContext";
 import Link from "next/link";
+import { useParams } from "next/navigation";
+import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
 export default function MyTasks(){
-    const {user} = useAuth();
     const [isLoading , setIsLoading] = useState(false);
     const [tasks , setTasks] = useState([]);
+    const {userId} = useParams();
+    const {user} = useAuth();
+    const router = useRouter();
 
     useEffect(()=>{
-        if(!user || !user._id){
+        if(!user){
+            router.push("/")
+        }
+    } , [user])
+
+    useEffect(()=>{
+        if(!userId){
             return;
         }
         setIsLoading(true);
         const getAlltasks = async()=>{
+            setIsLoading(true);
             try {
-                const response = await getAndDeleteReq(`${baseUrl}/task/get/allcreated/tasks/${user._id}` , "get");
+                const response = await getAndDeleteReq(`${baseUrl}/task/get/allcreated/tasks/${userId}` , "get");
                 if(response.status === "success"){
                     // console.log(response);
                     setTasks(response?.data || [])
@@ -30,13 +41,14 @@ export default function MyTasks(){
             }
         }
         getAlltasks();
-    }, [user]);
+    }, [userId]);
 
     return(
         <div className="min-h-screen flex flex-col justify-center items-center py-8 px-4">
             <h1 className="text-lg font-bold mb-3.5">MyTasks!</h1>
             <div className="flex flex-wrap gap-2.5 justify-center">
                 {
+                    isLoading ? "Processing..." :
                     tasks && tasks.length > 0 ? tasks.map((task)=>(
                         <div className="card w-96 shadow-lg" key={task._id}>
                             <div className="card-body">
@@ -52,7 +64,7 @@ export default function MyTasks(){
                                 </div>
                                 <div className="card-actions justify-end">
                                 <Link href={`/gettask/${task._id}`}><button className="btn btn-neutral shadow-lg">More</button></Link>
-                                <button className="btn btn-neutral shadow-lg">AssignTask</button>
+                                <Link href={`/assigntask/${task._id}`}><button className="btn btn-neutral shadow-lg">AssignTask</button></Link>
                                 </div>
                             </div>
                         </div>

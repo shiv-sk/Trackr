@@ -16,6 +16,13 @@ export default function NewTask(){
         priority:"",
         userId:""
     })
+    
+    useEffect(()=>{
+        if(!user){
+            router.push("/")
+        }
+    } , [user])
+
     const [isLoading , setIsLoading] = useState(false);
 
     const handleOnChange = (e)=>{

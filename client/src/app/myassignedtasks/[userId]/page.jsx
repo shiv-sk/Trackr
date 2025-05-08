@@ -1,24 +1,33 @@
 "use client";
 
-import { baseUrl, getAndDeleteReq } from "@/apicalls/apicalls";
+import { baseUrl, getAndDeleteReq, postAndPatchReq } from "@/apicalls/apicalls";
 import { useAuth } from "@/context/AuthContext";
 import Link from "next/link";
+import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
 export default function MyAssignedTasks(){
-    const {user} = useAuth();
     const [isLoading , setIsLoading] = useState(false);
     const [tasks , setTasks] = useState([]);
+    const {userId} = useParams();
+    const {user} = useAuth();
+    const router = useRouter();
+    
+    useEffect(()=>{
+        if(!user){
+            router.push("/")
+        }
+    } , [user])
 
     useEffect(()=>{
-        if(!user || !user._id){
+        if(!userId){
             return;
         }
         const assignedTasks = async()=>{
             setIsLoading(true);
             try {
-                const response = await getAndDeleteReq(`${baseUrl}/task/get/allassigned/tasks/${user._id}` , "get");
+                const response = await getAndDeleteReq(`${baseUrl}/task/get/allassigned/tasks/${userId}` , "get");
                 if(response.status === "success"){
                     console.log(response);
                     setTasks(response?.data || []);
@@ -31,7 +40,21 @@ export default function MyAssignedTasks(){
             }
         }
         assignedTasks();
-    } , [user]);
+    } , [userId]);
+
+    const handleMarkAsDone = async(e , taskId)=>{
+        e.preventDefault();
+        const response = await postAndPatchReq(`${baseUrl}/closetask/${taskId}`);
+        try {
+            if(response.status === "success"){
+                toast.success("Marked As Done!");
+                router.push("/");
+            }
+        } catch (error) {
+            const errorMessage = error?.response?.data?.message || "server Error! "
+            toast.error(errorMessage);
+        }
+    }
 
     return(
         <div className="min-h-screen flex flex-col justify-center items-center py-8 px-4">
@@ -53,7 +76,7 @@ export default function MyAssignedTasks(){
                                 </div>
                                 <div className="card-actions justify-end">
                                 <Link href={`/gettask/${task._id}`}><button className="btn btn-neutral shadow-lg">More</button></Link>
-                                <button className="btn btn-neutral shadow-lg">MarkAsDone</button>
+                                <button className="btn btn-neutral shadow-lg" onClick={(e)=>handleMarkAsDone(e , task._id)}>MarkAsDone</button>
                                 </div>
                             </div>
                         </div>

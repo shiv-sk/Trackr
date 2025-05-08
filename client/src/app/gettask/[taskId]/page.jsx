@@ -37,21 +37,21 @@ export default function TaskDetail(){
         getTask();
     } , [taskId]);
 
-    // const handleDelete = async(e , taskId)=>{
-    //     e.preventDefault();
-    //     setIsLoading(true);
-    //     try {
-    //         const response = await getAndDeleteReq(`${baseUrl}/task/${taskId}` , "delete");
-    //         if(response.status === "success"){
-    //             toast.success("tasks is deleted! ");
-    //         }
-    //     } catch (error) {
-    //         const errorMessage = error.response?.data?.message || "server Error! ";
-    //         toast.error(errorMessage)
-    //     }finally{
-    //         setIsLoading(false);
-    //     }
-    // }
+    const handleDelete = async(e , taskId)=>{
+        e.preventDefault();
+        setIsLoading(true);
+        try {
+            const response = await getAndDeleteReq(`${baseUrl}/task/${taskId}` , "delete");
+            if(response.status === "success"){
+                toast.success("tasks is deleted! ");
+            }
+        } catch (error) {
+            const errorMessage = error.response?.data?.message || "server Error! ";
+            toast.error(errorMessage)
+        }finally{
+            setIsLoading(false);
+        }
+    }
 
     return(
         <div className="min-h-screen flex justify-center items-center flex-col gap-2.5 py-5">
@@ -101,7 +101,7 @@ export default function TaskDetail(){
                             <div className="flex flex-wrap justify-around items-center gap-1.5">
                                 <button className="btn btn-neutral shadow-lg">Assign</button>
                                 <Link href={`/`}><button className="btn btn-neutral shadow-lg">Edit</button></Link>
-                                <button className="btn btn-neutral shadow-lg" >Delete</button>
+                                <button className="btn btn-neutral shadow-lg" onClick={(e)=>handleDelete(e , task._id)}>Delete</button>
                             </div>
                         </>
                     )

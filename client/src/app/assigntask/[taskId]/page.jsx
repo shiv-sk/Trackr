@@ -1,6 +1,8 @@
 "use client";
 import { baseUrl, getAndDeleteReq, postAndPatchReq } from "@/apicalls/apicalls";
-import { useParams } from "next/navigation";
+import { useAuth } from "@/context/AuthContext";
+import Link from "next/link";
+import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
@@ -8,7 +10,15 @@ export default function AssignTask(){
     const [users , setUsers] = useState([]);
     const [isLoading , setIsLoading] = useState(false);
     const {taskId} = useParams();
+    const {user} = useAuth();
+    const router = useRouter();
 
+    useEffect(()=>{
+        if(!user){
+            router.push("/")
+        }
+    } , [user])
+    
     useEffect(()=>{
         const getAllUsers = async()=>{
             setIsLoading(true);
@@ -56,6 +66,7 @@ export default function AssignTask(){
                         <th className="px-6 py-3">Email</th>
                         <th className="px-6 py-3">Role</th>
                         <th className="px-6 py-3">Assign</th>
+                        <th className="px-6 py-3">Analytic</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -70,6 +81,11 @@ export default function AssignTask(){
                                         className="btn btn-sm btn-neutral shadow-lg"
                                         onClick={(e) => handleAssignTask(e, user?._id)}
                                         disabled={isLoading}>{isLoading ? "Processing..." :"Assign"}</button>
+                                    </td>
+                                    <td className="px-6 py-4">
+                                        <Link href={`/analytic/${user._id}`}>
+                                            <button className="btn btn-sm btn-neutral shadow-lg">View</button>
+                                        </Link>
                                     </td>
                                 </tr>
                             )) : (

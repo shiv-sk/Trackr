@@ -14,7 +14,7 @@ const useAuth = ()=>useContext(AuthContext);
 const AuthProvider = ({children})=>{
     const [user , setUser] = useState(null);
     const [error , setError] = useState(false);
-    const [isLoading , setIsLoading] = useState(true);
+    const [isLoading , setIsLoading] = useState(false);
 
     useEffect(()=>{
         const currentUser = async()=>{
