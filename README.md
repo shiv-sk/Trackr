@@ -76,13 +76,14 @@ npm run dev   (port-3000)
 ### Email Notifications
 This project uses Resend to send automated email notifications. Users receive emails when tasks are assigned to them.
 Note: Please visit the official Resend website to generate your API KEy and configure it in your environment variables as RESEND_API_KEY.
-
+```
 ### Screenshots
-![Trackr8](https://github.com/user-attachments/assets/14fb3c5e-63c8-4eb3-895f-d2d38db87482)
-![Trackr7](https://github.com/user-attachments/assets/1316e7b2-3a4f-40a4-b3bb-2dd8c572f626)
-![Trackr6](https://github.com/user-attachments/assets/2365ca35-3e6c-44ef-9f12-81a19bdfa0af)
-![Trackr5](https://github.com/user-attachments/assets/fcad0ed0-76dd-449f-8d00-40d70e4c2520)
-![Trackr4](https://github.com/user-attachments/assets/0da990f5-516f-4ac4-bd12-3d92e14ab8b1)
-![Trackr3](https://github.com/user-attachments/assets/9c45162c-d11e-4f48-bfa7-b54d8b3daa54)
-![Trackr2](https://github.com/user-attachments/assets/eef24d51-700a-486c-925d-1ceb77b99ee0)
-![Trackr1](https://github.com/user-attachments/assets/429fbf7f-1d04-478a-9e8a-dd5e344f9734)
+![Trackr8](https://github.com/user-attachments/assets/98ed1e03-a5c6-4364-9a1f-e0244e11c15a)
+![Trackr7](https://github.com/user-attachments/assets/32c7da7c-7c3d-4ab7-973f-64c0457f0e49)
+![Trackr6](https://github.com/user-attachments/assets/a81383fb-1b65-457f-b4db-3bf01d186b7f)
+![Trackr5](https://github.com/user-attachments/assets/9601f110-c3fe-4569-be59-923ef9034822)
+![Trackr4](https://github.com/user-attachments/assets/ccec0fcc-1818-4bcb-8e8d-de6d5cd7864e)
+![Trackr3](https://github.com/user-attachments/assets/cb70b9c3-4981-4936-9315-36ab4decfd7d)
+![Trackr2](https://github.com/user-attachments/assets/10940f84-8105-4d1a-88d7-0b084daae747)
+![Trackr1](https://github.com/user-attachments/assets/b435bd0e-7c04-4158-b282-36137c572b9f)
+
