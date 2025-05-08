@@ -2,7 +2,7 @@
 import { baseUrl, postAndPatchReq } from "@/apicalls/apicalls";
 import { useAuth } from "@/context/AuthContext";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
 export default function NewTask(){
@@ -16,7 +16,7 @@ export default function NewTask(){
         priority:"",
         userId:""
     })
-    
+
     useEffect(()=>{
         if(!user){
             router.push("/")
