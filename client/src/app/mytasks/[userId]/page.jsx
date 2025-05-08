@@ -2,8 +2,7 @@
 import { baseUrl, getAndDeleteReq } from "@/apicalls/apicalls";
 import { useAuth } from "@/context/AuthContext";
 import Link from "next/link";
-import { useParams } from "next/navigation";
-import { useRouter } from "next/router";
+import { useParams , useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
