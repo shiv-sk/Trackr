@@ -76,9 +76,9 @@ export default function TaskDetail(){
                                 </span>
                             </div>
                             <div className="flex flex-wrap justify-around items-center gap-1.5">
-                                <button className="btn btn-neutral shadow-lg">Assign</button>
+                                <Link href={`/assigntask/${task._id}`}><button className="btn btn-neutral shadow-lg">Assign</button></Link>
                                 <Link href={`/updatetask/${task._id}`}><button className="btn btn-neutral shadow-lg">Edit</button></Link>
-                                <button className="btn btn-neutral shadow-lg">Delete</button>
+                                <button className="btn btn-neutral shadow-lg" onClick={(e)=>handleDelete(e , task._id)}>Delete</button>
                             </div>
                         </>
                     ) : (
@@ -99,9 +99,9 @@ export default function TaskDetail(){
                                 </span>
                             </div>
                             <div className="flex flex-wrap justify-around items-center gap-1.5">
-                                <button className="btn btn-neutral shadow-lg">Assign</button>
+                                <Link href={`/`}><button className="btn btn-neutral shadow-lg">Assign</button></Link>
                                 <Link href={`/`}><button className="btn btn-neutral shadow-lg">Edit</button></Link>
-                                <button className="btn btn-neutral shadow-lg" onClick={(e)=>handleDelete(e , task._id)}>Delete</button>
+                                <button className="btn btn-neutral shadow-lg">Delete</button>
                             </div>
                         </>
                     )

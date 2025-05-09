@@ -15,7 +15,8 @@ export default function AssignTask(){
 
     useEffect(()=>{
         if(!user){
-            router.push("/")
+            router.push("/");
+            toast.warning("login to view this page!");
         }
     } , [user])
     

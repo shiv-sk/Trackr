@@ -1,8 +1,10 @@
 "use client";
 
 import { baseUrl, getAndDeleteReq } from "@/apicalls/apicalls";
-import { useParams } from "next/navigation";
+import { useAuth } from "@/context/AuthContext";
+import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 
 export default function UpdateTask(){
     const {taskId} = useParams();
@@ -13,6 +15,14 @@ export default function UpdateTask(){
         priority:"",
         duedate:""
     });
+    const {user} = useAuth();
+    const router = useRouter();
+    useEffect(()=>{
+        if(!user){
+            router.push("/");
+            toast.warning("login to view this page!");
+        }
+    } , [user])
 
     const handleOnChange = (e)=>{
         setTask({...task , [e.target.name]:e.target.value})
