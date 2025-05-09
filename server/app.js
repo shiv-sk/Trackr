@@ -5,7 +5,7 @@ const cors = require("cors");
 const helmet = require("helmet");
 
 
-const allowedOrigins = ["http://localhost:3000" , "https://trackr-6cui.vercel.app"];
+const allowedOrigins = ["http://localhost:3000" , "https://trackr-6cui-git-main-shivanand-yks-projects.vercel.app"];
 const corsOption = {
     origin:function(origin , callback){
         if(!origin || allowedOrigins.includes(origin)){
